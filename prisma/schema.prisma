@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema", "postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  schemas    = ["auth", "tugas-akhir", "notes"]
+  extensions = [uuidOssp(map: "uuid-ossp")]
+}
+
+model Notes {
+  id_notes   String   @id @unique(map: "unique_responsen_cuid") @default(dbgenerated("public.uuid_generate_v4()")) @db.VarChar(255)
+  id_user    String?
+  title      String
+  content    String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  user User? @relation(fields: [id_user], references: [id_user])
+
+  @@schema("notes")
+}
+
+model User {
+  id_user    String   @id @default(dbgenerated("public.uuid_generate_v4()")) @db.VarChar(255)
+  nm_lengkap String
+  email      String   @unique
+  username   String   @unique
+  password   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  notes Notes[]
+
+  @@schema("auth")
+  resultProject ResultProject[]
+  ReviewProject ReviewProject[]
+}
+
+model ResultProject {
+  id_project         String           @id @unique @default(dbgenerated("public.uuid_generate_v4()")) @db.VarChar(255)
+  id_user            String
+  name_mhs           String
+  nim_mhs            String           @unique
+  status             String
+  profile_link       String
+  project_link       String
+  image_project_link String
+
+  total_reviews      Int              @default(0)
+  average_score      Float            @default(0.0)
+
+  user               User?            @relation(fields: [id_user], references: [id_user])
+  reviewProject      ReviewProject[]
+
+  @@schema("tugas-akhir")
+}
+
+model ReviewProject {
+  id_review         String        @id @default(dbgenerated("public.uuid_generate_v4()")) @db.VarChar(255)
+  id_project        String
+  reviewer_id     String
+  score             Int          
+  reviewed_at       DateTime     @default(now())
+
+  user User? @relation(fields: [reviewer_id], references: [id_user])
+  project           ResultProject @relation(fields: [id_project], references: [id_project])
+
+  @@schema("tugas-akhir")
+}
