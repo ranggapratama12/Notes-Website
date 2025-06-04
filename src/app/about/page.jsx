@@ -46,6 +46,13 @@ const AboutPage = () => {
             
             <div className="flex gap-4 mt-6">
               <a 
+                href="https://wa.me/+6287782691102" 
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-purple-500/25"
+              >
+                <Mail size={18} />
+                Contact
+              </a>
+              <a 
                 href="https://github.com/ranggapratama12" 
                 className="bg-gradient-to-r from-gray-600 to-gray-800 hover:from-gray-700 hover:to-gray-900 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300 hover:scale-105 shadow-lg"
               >
